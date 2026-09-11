@@ -338,7 +338,7 @@ So the referral fires only in the second case:
 ```
 REF-03  duration window
 fires when: SUMMARY-PUBLIC = FAIL
-provision:  SUMMARY-DURATION  (rcny-5-303-published-results.md:L33)
+provision:  SUMMARY-DURATION  (rcny-5-303-published-results.md:L32)
 question:   When did the employer last use this tool for an employment decision?
 evidence:   The employer's own record of tool use, or a screening step observable
             in a hiring process within the last six months.
