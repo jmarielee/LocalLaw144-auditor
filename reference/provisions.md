@@ -50,7 +50,7 @@ question is settled by a human.
 | `AEDT-DEF-SUBST` | The three prongs of "substantially assist or replace discretionary decision making" | `rcny-5-300-definitions.md:L23` |
 | `AEDT-DEF-OUTPUT` | "Simplified output" — score, tag, categorisation, recommendation, ranking | `rcny-5-300-definitions.md:L102` |
 | `AEDT-DEF-SCREEN` | "Screen" = determine whether a candidate should be selected or advanced | `rcny-5-300-definitions.md:L90` |
-| `AEDT-DEF-AUDITOR` | "Independent auditor" and its three disqualifications | `rcny-5-300-definitions.md:L52` |
+| `AEDT-DEF-AUDITOR` | Independent Auditor. "Independent auditor" means a person or group that is. "Independent auditor" and its three disqualifications | `rcny-5-300-definitions.md:L51` |
 
 ## Conditional provisions
 
