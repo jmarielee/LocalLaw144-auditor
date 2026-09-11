@@ -18,6 +18,57 @@ quoted page text, the location string on the corporate requisition — was check
 against source by hand. All of it traced to material actually supplied or
 actually on the page. Nothing was invented.
 
+---
+
+## Run F — the live run, and the trap nobody planted
+
+Runs A through C audited one employer; Run E is a fixture. Run F is a second
+real subject, Accenture, which publishes a substantive New York disclosure. It
+is the first run in this folder where passes and failures appear in the same
+report: seven PASS, two FAIL, two REFERRED, seven Bound Referrals open.
+
+**It failed its own quote check on all eighteen quotes, and the auditor
+stopped.** The reference files carry 575 non-breaking spaces. amlegal's export
+uses U+00A0 for indentation and after every numeral, so a quote rebuilt with
+ordinary spaces is byte-different from the source and visually identical on
+screen. The auditor rebuilt every quote from source bytes rather than reporting
+a clean pass. `verify.js` normalises U+00A0, so the checker would have caught
+this — but the auditor caught it first, without the checker in the project.
+Nobody planted this. It was in the reference files from the day they were
+retrieved, and no run before this one had touched it.
+
+**Three things the folder did not tell it to do.**
+
+It recorded `SUMMARY-CONTENT` as *not reached* rather than FAIL. Four of the
+seven elements §5-303(a)(1) enumerates sit in a results table published as an
+image the operator could not render. Reporting them absent would have been a
+finding it did not make, so it opened `REF-05` with both branches committed.
+
+It failed `SUMMARY-PUBLIC` on the distribution date and not on the summary. The
+provider's page carries a field labelled "Distribution Date" giving a range the
+surrounding text describes as the window of the provider's own applicant data.
+§5-300 defines distribution date as the date the employer began using the tool.
+That distinction is the whole finding.
+
+It opened `REF-07` for a second tool. The hiring-journey page describes a
+screening step where a score threshold automatically decides advancement,
+distinct from the AI tool named in the New York Notices and not covered by the
+linked audit. Whether its scoring derives from any of the four techniques in the
+base definition is not publicly observable, so it is a referral rather than a
+finding. It surfaced only from the rule that candidate-facing pages are read in
+full; none of the run's search terms would have caught it.
+
+**Two defects in this folder, found by the auditor auditing with it.**
+`rules.md`'s `REF-03` template cited `rcny-5-303-published-results.md:L33` while
+`provisions.md` resolves `SUMMARY-DURATION` to `L32` — the index was corrected
+on submission day and the template it is copied from was not. And
+`provisions.md` indexed `AEDT-DEF-AUDITOR` at `L52`, one line into the
+definition, which opens at `L51`. Both are corrected. Neither was found by
+`verify.js`, which checks findings against the index and does not check the
+index against the provisions themselves. That is a sixth gap, and it is open.
+
+---
+
 **Four things broke, and each became a rule.** None of them was foreseen at the
 desk; every one came from running the thing.
 
