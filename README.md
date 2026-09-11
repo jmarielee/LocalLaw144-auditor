@@ -103,10 +103,12 @@ No install, no network, no dependencies. It reads every report in `runs/` and
 checks that quotes are verbatim substrings of the reference file they cite, that
 cited line numbers land inside the file on a non-empty line, that **every quote
 begins on the line it cites** rather than merely occurring somewhere in the file,
-that every obligation is reported exactly once, that severity recomputes from the
-mapping in `rules.md`, that a conditional referral fires when its condition is
-met, that referrals carry all five fields with bound outcomes, and that no bare
-verdict appears while a blocking referral is open.
+that **every finding cites the line `reference/provisions.md` names for its
+obligation**, that every obligation is reported exactly once, that severity
+matches the mapping table it reads out of `rules.md` at run time, that a
+conditional referral fires when its condition is met, that referrals carry all
+five fields with bound outcomes, and that no bare verdict appears while a
+blocking referral is open.
 
 Run B verifies 18 quotes. Run E, the fixture, verifies 13 and anchors all 13 to
 their cited line.
@@ -115,27 +117,37 @@ their cited line.
 the verifier judges it against that declaration**, not against passing alone:
 
 ```
-runs/report-a-thin-record.md        FAIL  (expected fail)  as declared
-runs/report-b-full-record.md        FAIL  (expected fail)  as declared
-runs/report-c-contaminated.md       FAIL  (expected fail)  as declared
-runs/report-d-tampered.md           FAIL  (expected fail)  as declared
-runs/report-e-compliant-fixture.md  PASS  (expected pass)  as declared
+runs/report-a-thin-record.md        FAIL:18 (expected fail:18)  as declared
+runs/report-b-full-record.md        FAIL:11 (expected fail:11)  as declared
+runs/report-c-contaminated.md       FAIL:18 (expected fail:18)  as declared
+runs/report-d-tampered.md           FAIL:16 (expected fail:16)  as declared
+runs/report-e-compliant-fixture.md  PASS    (expected pass)     as declared
 
 5 of 5 reports behaved as documented.
 ```
+
+A declaration carries a **count**, not just a direction. `expect: fail (11)` means
+eleven known defects, and the board goes red if it finds ten or twelve. Without
+the count, a report documented to fail absorbs any number of new ones — which it
+did, until submission day. See `TESTING.md`.
 
 Four of five fail, on purpose. Two predate rules added after they ran, one is a
 deliberately corrupted copy carrying four planted defects, and one carries
 defects the auditor itself found and refused to edit out — see `TESTING.md`.
 Every failure prints in full above the summary.
 
-**A report that passes when its header says it should fail is itself a
-failure.** That is the check that catches a defect quietly edited out to keep a
-clean board. A verifier that passes everything is not checking anything.
+**A report that behaves differently from its header is itself a failure**,
+whichever direction it moves. That is the check that catches a defect quietly
+edited out to keep a clean board. A verifier that passes everything is not
+checking anything.
 
-The anchor check was added on submission day, after a finding was found to pass
-while citing a line its quote did not appear on. It immediately found five
-citation defects in Run B. They are still on the board. `TESTING.md` says why.
+Two checks were added on submission day. `ANCHOR`, after a finding was found to
+pass while citing a line its quote did not appear on — it immediately found five
+citation defects in Run B. `INDEX`, after an outside reviewer found that four
+obligations cited a line `provisions.md` did not name for them, in every report,
+with the quote then dropping the words that create the obligation. Both sets are
+still on the board in the four real runs. `TESTING.md` says why, and what else
+that review broke.
 
 ---
 
@@ -164,7 +176,9 @@ APPLICABLE.
 
 ## What it audits, and what it refuses to
 
-Four obligations, all publicly checkable:
+Four obligations, all publicly checkable. Each is checked as several separate
+provisions, eleven in total — the full list is the "Audited obligations" table in
+`reference/provisions.md`, and every report reports all eleven:
 
 | | Obligation | Provision |
 | --- | --- | --- |
@@ -215,7 +229,7 @@ accounts of this law disagree with each other.
 | `rules.md` | The passes, the finding format, severity, the gate |
 | `examples.md` | Worked examples, with what to notice in each |
 | `METHOD.md` | Bound Referrals — the mechanism, in full |
-| `TESTING.md` | Five runs, what broke, and the four gaps found in the verifier |
+| `TESTING.md` | Five runs, what broke, and every gap found in the verifier so far |
 | `runs/` | Five reports, the evidence records, the answer key, the screening log |
 | `verify.js` | The checker |
 | `resolve.js` | Answers a referral and computes what follows |

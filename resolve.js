@@ -255,7 +255,8 @@ function main() {
   const fails = rows.filter(r => r.resolved.startsWith('FAIL'));
   if (fails.length) {
     console.log('');
-    console.log('  Severity on resolved FAILs, read off §20-872 via the rules.md mapping:');
+    console.log('  Severity as recorded in the report. verify.js is what checks these');
+    console.log('  against the rules.md mapping, which is read off §20-872:');
     for (const f of fails) console.log(`    ${f.ob.padEnd(w)}  ${f.sev || '(none recorded)'}`);
   }
 

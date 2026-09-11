@@ -52,22 +52,19 @@ const RUNS = path.join(ROOT, 'runs');
 const VERDICTS = ['PASS', 'FAIL', 'NOT APPLICABLE', 'REFERRED'];
 const SEVERITIES = ['ACCRUING', 'DISCRETE', '—', '-', ''];
 
-/* Severity mapping — mirrors the table in rules.md.
-   Obligations under §20-871(a) accrue daily per §20-872(b).
-   Obligations under §20-871(b) are discrete per §20-872(c). */
-const SEVERITY_MAP = {
-  'AUDIT-CURRENCY':   'ACCRUING',
-  'SUMMARY-PUBLIC':   'ACCRUING',
-  'SUMMARY-LOCATION': 'ACCRUING',
-  'SUMMARY-CONTENT':  'ACCRUING',
-  'SUMMARY-LINK':     'ACCRUING',
-  'NOTICE-USE':       'DISCRETE',
-  'NOTICE-QUALS':     'DISCRETE',
-  'NOTICE-ALT':       'DISCRETE',
-  'NOTICE-METHOD':    'DISCRETE',
-  'DATA-DISCLOSURE':  'DISCRETE',
-  'DATA-WEBPOST':     'DISCRETE',
-};
+/* Severity mapping — READ FROM rules.md, not transcribed.
+   If rules.md and this checker ever disagree, the checker is wrong by
+   definition, so it must not keep its own copy. */
+function severityMap() {
+  const src = fs.readFileSync(path.join(ROOT, 'rules.md'), 'utf8');
+  const map = {};
+  for (const m of src.matchAll(/^\|\s*`([A-Z0-9-]+)`\s*\|[^|]*\|\s*`(ACCRUING|DISCRETE)`\s*\|/gm)) {
+    map[m[1]] = m[2];
+  }
+  if (!Object.keys(map).length) throw new Error('rules.md: no severity mapping table found');
+  return map;
+}
+const SEVERITY_MAP = severityMap();
 
 // ---------------------------------------------------------------- utilities
 
@@ -87,6 +84,14 @@ function readRef(file) {
 
 /* Pull the audited obligation IDs out of provisions.md. Rows look like:
    | `SUMMARY-PUBLIC` | description | `file.md:L24` | */
+/* Map obligation ID -> the file:line provisions.md resolves it to. */
+function provisionIndex() {
+  const src = readRef('provisions.md');
+  const idx = {};
+  for (const m of src.matchAll(/^\|\s*`([A-Z0-9-]+)`\s*\|[^|]*\|\s*`([a-z0-9-]+\.md:L\d+)`/gm)) idx[m[1]] = m[2];
+  return idx;
+}
+
 function auditedObligations() {
   const src = readRef('provisions.md');
   if (!src) throw new Error('reference/provisions.md not found');
@@ -154,8 +159,10 @@ function parseReferral(body) {
 function verify(reportPath) {
   const src = fs.readFileSync(reportPath, 'utf8');
   const { findings, referrals } = parseBlocks(src);
-  const expectM = src.match(/^expect:\s*(pass|fail)\s*(?:—|-)?\s*(.*)$/mi);
-  const expect = expectM ? { status: expectM[1].toLowerCase(), why: expectM[2].trim() } : null;
+  const expectM = src.match(/^expect:\s*(pass|fail)\s*(?:\((\d+)\))?\s*(?:—|-)?\s*(.*)$/mi);
+  const expect = expectM
+    ? { status: expectM[1].toLowerCase(), count: expectM[2] ? parseInt(expectM[2], 10) : null, why: expectM[3].trim() }
+    : null;
   const fail = [];
   const pass = [];
 
@@ -199,6 +206,20 @@ function verify(reportPath) {
   }
   if (quotesOK) pass.push(`QUOTE     ${quotesOK} quote(s) verified verbatim against reference/`);
   if (anchorsOK) pass.push(`ANCHOR    ${anchorsOK} quote(s) verified to begin on the line they cite`);
+
+  // --- INDEX: the cite a finding uses must be the cite the index names -----
+  const PIDX = provisionIndex();
+  let idxOK = 0;
+  for (const f of findings) {
+    const ob = (f.obligation || '').trim();
+    const want = PIDX[ob];
+    if (!want) continue;
+    const got = ((f.provision || '').match(/[a-z0-9-]+\.md:L\d+/) || [])[0];
+    if (!got) continue;
+    if (got === want) idxOK++;
+    else fail.push(['INDEX', `${f.id} (${ob}): cites ${got}, but reference/provisions.md resolves ${ob} to ${want}`]);
+  }
+  if (idxOK) pass.push(`INDEX     ${idxOK} finding(s) cite the line provisions.md names for their obligation`);
 
   // --- 3: coverage --------------------------------------------------------
   const required = auditedObligations();
@@ -324,12 +345,15 @@ function verify(reportPath) {
   // --- no legal conclusions -----------------------------------------------
   // A report is required to SAY it draws no conclusion, so the phrase appears
   // in every clean report. Only an unnegated assertion is a failure.
-  const NEGATED = /\b(nothing|no conclusion|not|never|neither|cannot|belongs to a tribunal|is not drawn|does not)\b/i;
-  const ASSERTS = /\b(is in violation of|has violated|violates \u00a7|is non-compliant with)\b/i;
+  const NEGATED = /\b(nothing|no conclusion|not|never|neither|cannot|does not|belongs to a tribunal)\b.{0,80}$/i;
+  const ASSERTS = /\b(is in violation of|has violated|violates \u00a7|is non-compliant with|is in breach of|is unlawful|broke the law|acted unlawfully)\b/i;
   for (const line of src.split(/\n/)) {
-    // Findings wrap, so test the sentence around the assertion, not the line.
-    if (!ASSERTS.test(line)) continue;
-    if (NEGATED.test(line)) continue;
+    const m = ASSERTS.exec(line);
+    if (!m) continue;
+    // The negation must sit immediately BEFORE the assertion to defuse it.
+    // "does not conclude that X is in violation of" is fine.
+    // "X is in violation of Y, but that is not our call" is not.
+    if (NEGATED.test(line.slice(0, m.index))) continue;
     fail.push(['CONCLUSION', `report states a legal conclusion: "${line.trim().slice(0, 90)}..."`]);
   }
 
@@ -385,9 +409,16 @@ function main() {
       console.log(`\n  NOTE  no expect: line in this report's header; cannot judge against a declaration.`);
       summary.push({ name: path.relative(ROOT, r), actual, expected: '?', ok: false });
       anyFail = true;
+    } else if (res.expect.status === 'fail' && res.expect.count !== null && res.fail.length !== res.expect.count) {
+      console.log(`\n  UNEXPECTED   header says expect: fail (${res.expect.count}), but this report produced ${res.fail.length} failure(s).`);
+      console.log(res.fail.length > res.expect.count
+        ? '               A new defect has entered a report documented to carry a fixed set.'
+        : '               A documented defect has disappeared. It was edited out, or a check was weakened.');
+      summary.push({ name: path.relative(ROOT, r), actual: `fail:${res.fail.length}`, expected: `fail:${res.expect.count}`, ok: false });
+      anyFail = true;
     } else if (actual === res.expect.status) {
       console.log(`\n  AS DECLARED  header says expect: ${res.expect.status}${res.expect.why ? ' — ' + res.expect.why : ''}`);
-      summary.push({ name: path.relative(ROOT, r), actual, expected: res.expect.status, ok: true });
+      summary.push({ name: path.relative(ROOT, r), actual: res.expect.count !== null ? `fail:${res.fail.length}` : actual, expected: res.expect.count !== null ? `fail:${res.expect.count}` : res.expect.status, ok: true });
     } else {
       console.log(`\n  UNEXPECTED   header says expect: ${res.expect.status}, but this report ${actual === 'pass' ? 'passed' : 'failed'}.`);
       if (actual === 'pass') console.log('               A report that passes when it is documented to fail has been edited,\n               or the check that caught it has been weakened.');

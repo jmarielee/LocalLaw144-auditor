@@ -42,17 +42,28 @@ finding:    The material §20-871(a)(2) requires to be publicly available was no
 
 **What to notice.**
 
-The `quote` is verbatim from `reference/admin-20-871-requirements.md`, line 24.
-Open the file, go to line 24, and the text matches. That is true of every quote
-in every report this folder produces — and since submission day it is checked
-mechanically rather than asserted: `verify.js` fails any finding whose quote does
-not begin on the line it cites.
+**This block carries a defect, and it is left here on purpose. Do not copy its
+citation.**
 
-Note what the quote does *not* contain. §20-871(a)(2) begins one line earlier, at
-L23, with "A summary of the results of the most recent bias audit of such tool";
-the fragment quoted here starts at the distribution-date clause. The obligation
-is indexed at L23 in `provisions.md`. A reader checking this finding should open
-L23 and read both lines.
+The `quote` is verbatim from `reference/admin-20-871-requirements.md` and it does
+begin on line 24. But §20-871(a)(2) begins one line earlier, at L23, with "A
+summary of the results of the most recent bias audit of such tool" — and
+`provisions.md` indexes `SUMMARY-PUBLIC` at L23. The fragment quoted here starts
+at the distribution-date clause, which drops the words that create the obligation
+the finding is judging.
+
+Two checks in `verify.js` catch this, and they are independent:
+
+- `ANCHOR` — a quote must begin on the line it cites, not merely appear somewhere
+  in the file. This block passes `ANCHOR`.
+- `INDEX` — the line a finding cites must be the line `provisions.md` resolves
+  that obligation to. This block fails `INDEX`.
+
+Run B carries this defect and is not amended. The board is not cleaned by editing
+history; see `TESTING.md`. **Write your findings the other way: cite the line
+`provisions.md` names, and begin the quote there.**
+`runs/report-e-compliant-fixture.md` shows every one of the eleven done
+correctly.
 
 The `searched` field names twelve locations with times. A finding of absence
 with no search record is not a finding.
@@ -88,8 +99,8 @@ question:  Does Robert Half rely solely on the output of the matching software
            deciding which candidates are advanced for New York City positions?
 evidence:  Recruiter operating instructions, the internal submittal policy, or
            the applicant-tracking configuration.
-once answered, if YES →  The tool is an AEDT. Every obligation becomes live and
-           is adjudicated on the findings already recorded.
+once answered, if YES →  The tool is an AEDT. All eleven obligations become live
+           and are adjudicated on the findings already gathered.
 once answered, if NO  →  Local Law 144 does not apply. Every obligation
            resolves NOT APPLICABLE.
 status:    OPEN

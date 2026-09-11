@@ -6,10 +6,10 @@ against a synthetic fixture built to comply, one deliberately corrupted.
 | Run | Conditions | Result |
 | --- | --- | --- |
 | A | Thin evidence: pages pasted in, no search record, no URLs, no times | Findings produced; the auditor wrote its own Search-record integrity note limiting every absence finding to the seven documents supplied |
-| B | Full evidence record, fresh chat, nothing preceding it | Passes all seven verifier checks |
+| B | Full evidence record, fresh chat, nothing preceding it | Passed clean when it ran. Now fails on eleven defects that later checks exposed. Not amended — see below |
 | C | Full evidence record, but run in the chat containing Run A's report | **Discounted.** Not a clean test of the folder; published labelled |
 | D | Not a run. A copy of B with four defects planted in it | Fails on exactly those four, and nothing else |
-| E | Synthetic employer built to comply, fresh chat | Nine PASS, one NOT APPLICABLE, one PASS, zero FAIL; passes verification |
+| E | Synthetic employer built to comply, fresh chat | Eleven PASS, zero NOT APPLICABLE, zero FAIL; passes verification. The answer key predicted nine PASS and one NOT APPLICABLE — the auditor diverged on `SUMMARY-LINK` and was right; see the addendum in `fixture-compliant-EXPECTED.md` |
 
 **No fabrications.** Every checkable detail in Run A — URLs, document dates,
 quoted page text, the location string on the corporate requisition — was checked
@@ -54,8 +54,10 @@ exist, and the file says so three times.
 The expected result was written **before** the audit ran, in
 `fixture-compliant-EXPECTED.md`. A fixture graded after the fact grades nothing.
 
-The auditor produced nine PASS, one NOT APPLICABLE, one PASS, zero FAIL, and the
-four things the fixture existed to test all held: the scope referral stayed open
+The auditor produced eleven PASS and zero FAIL. The answer key had predicted nine
+PASS, one NOT APPLICABLE and one PASS on the alternative limb; the divergence is
+Divergence 2 below and the prediction was not amended. The four things the
+fixture existed to test all held: the scope referral stayed open
 despite full compliance, the conditional referral stayed correctly dormant, no
 referral opened on the data-disclosure limb that was satisfied, and the impact
 ratios were not evaluated.
@@ -90,9 +92,10 @@ purpose, each one a different class:
 | 3 | A referral's entire `quote:` field deleted | `REFERRAL` |
 | 4 | A whole obligation's finding block removed | `COVERAGE` |
 
-The verifier reports exactly those four and nothing else. The other fifteen
-quotes, six referrals and three severities in the same file still verify clean,
-so the file is not simply failing wholesale because something in it is wrong.
+The verifier reports those four, plus every defect Run B already carried, which
+this file inherits as a copy of it — sixteen in total. The other fifteen quotes,
+five referrals and three severities in the same file still verify clean, so the
+file is not simply failing wholesale because something in it is wrong.
 
 The four defects are listed at the top of the file, with instructions to diff it
 against `report-b-full-record.md`. Anyone can plant them again.
@@ -154,6 +157,60 @@ refuse.
 
 ---
 
+## A fifth gap, and two overclaims, found on submission day
+
+An outside reviewer cloned this repo, re-implemented the citation checks
+independently in Python rather than trusting `verify.js`, and diffed
+`reference/` word-for-word against the enacted Local Law 144 and the DCWP
+Notice of Adoption. The reference files came back clean. Three other things
+did not.
+
+**1. Nothing checked a finding's citation against the index.** `provisions.md`
+resolves every obligation to a file and line, and no check confirmed a finding
+actually cited that line. Four obligations — `SUMMARY-PUBLIC`, `SUMMARY-LINK`,
+`DATA-DISCLOSURE`, `DATA-WEBPOST` — cited a line the index did not name, in
+every report, and the quote then began partway into the provision and dropped
+the words that create the obligation. `DATA-WEBPOST` is the duty to post
+information *on the employment section of the website*; its quote omitted "on
+the employment section of its website." The `ANCHOR` check could not catch this
+and in one respect rewarded it, since a quote trimmed to match a wrong line
+anchors cleanly.
+
+`INDEX` closes it: a finding must cite the line `provisions.md` names for its
+obligation. The four real runs are not amended and now carry the failure. The
+fixture was corrected, because a fixture is a test rig rather than evidence and
+a rig that cannot demonstrate the clean path is useless. The correction is four
+citation lines and four extended quotes, and it is in the commit history.
+
+**2. `SEVERITY` did not read `rules.md`.** It held a hand-transcribed copy of
+the mapping table inside `verify.js`. Inverting the table in `rules.md` produced
+no complaint at all — the checker reported "recomputed from the rules.md
+mapping" while recomputing from its own copy. Two copies of a rule with nothing
+comparing them is the same failure this folder refuses in a `reference/` folder
+that only summarises the standard. `verify.js` now parses the table out of
+`rules.md` at run time and throws if it cannot find it.
+
+**3. `expect: fail` was a one-bit declaration.** A report documented to fail
+absorbed any number of new defects without the board changing. Demonstrated by
+pasting an invented provision — a certification requirement that appears nowhere
+in NYC law — into Run B: the failure list grew, and the summary still printed
+"5 of 5 reports behaved as documented" and exited 0. The declaration now carries
+a count, `expect: fail (11)`, and a report that produces a different number of
+failures than it declares is `UNEXPECTED` in either direction. More failures
+means a new defect entered. Fewer means a documented defect was edited out or a
+check was weakened.
+
+A fourth item was raised and fixed: the `CONCLUSION` check matched only four
+phrasings and treated the word "not" anywhere on a line as a disclaimer, so
+"this employer is in breach of Local Law 144" passed, and so did "is in
+violation of §5-304 but that is not our call." The negation must now sit before
+the assertion, and the forbidden phrasings match the list in `rules.md`.
+
+All four are the same failure class this file keeps recording: **a check that
+runs and reports nothing looks exactly like a check that passes.**
+
+---
+
 ## The claim that had never been tested
 
 `rules.md` says a referral's outcomes are committed before the answer arrives,
@@ -199,7 +256,7 @@ node resolve.js runs/report-b-full-record.md REF-01=YES
 ```
 
 **Path 2 — the auditor.** A fresh chat, the folder, Run B, and the answer in
-plain words. Result in `runs/report-b-resolved.md`:
+plain words. Result in `runs/resolution-b-REF-01-YES.md`:
 
 ```
 → 2 FAIL · 1 NOT APPLICABLE · 8 REFERRED
