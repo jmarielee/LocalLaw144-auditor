@@ -1,6 +1,6 @@
 # Examples
 
-Two audits, both real. Nothing below was written for illustration — every block
+Two examples, both real. Nothing below was written for illustration — every block
 is output this folder produced against Robert Half Inc. on 2026-09-10, trimmed
 for length and not otherwise altered. The full reports and the evidence record
 ship in `runs/`.
@@ -44,7 +44,15 @@ finding:    The material §20-871(a)(2) requires to be publicly available was no
 
 The `quote` is verbatim from `reference/admin-20-871-requirements.md`, line 24.
 Open the file, go to line 24, and the text matches. That is true of every quote
-in every report this folder produces.
+in every report this folder produces — and since submission day it is checked
+mechanically rather than asserted: `verify.js` fails any finding whose quote does
+not begin on the line it cites.
+
+Note what the quote does *not* contain. §20-871(a)(2) begins one line earlier, at
+L23, with "A summary of the results of the most recent bias audit of such tool";
+the fragment quoted here starts at the distribution-date clause. The obligation
+is indexed at L23 in `provisions.md`. A reader checking this finding should open
+L23 and read both lines.
 
 The `searched` field names twelve locations with times. A finding of absence
 with no search record is not a finding.
@@ -107,13 +115,16 @@ would clear the employer.
 
 ## What a full report contains
 
-Eleven obligations, every one reported — the passes, the failures, the
-not-applicables and the referrals. Seven Bound Referrals. A verdict table
+Eleven obligations, every one reported. Seven Bound Referrals. A verdict table
 mapping each obligation to the referrals governing it. A statement of what was
 not audited and what was not searched.
 
 The Robert Half report ran to four held FAILs, one held NOT APPLICABLE, and six
-REFERRED, with an overall state of `AWAITING HUMAN DETERMINATION`.
+REFERRED, with an overall state of `AWAITING HUMAN DETERMINATION`. No passes —
+not because passes are not reported, but because this subject published nothing
+that satisfied an obligation, and a pass is not something to award for absence.
+`runs/report-e-compliant-fixture.md` is the same eleven obligations against a
+compliant subject: eleven PASS, each citing the same provisions.
 
 ---
 
