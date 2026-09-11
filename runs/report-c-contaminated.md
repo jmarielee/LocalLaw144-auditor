@@ -16,6 +16,8 @@ chat, nothing preceding it.
 
 Predates two rules.md changes — the held-verdict notation and the mandatory
 quote field on referrals. Neither appears here.
+
+expect: fail — predates the same two rules as Run A; also a contaminated run, see header
 -->
 
 # LL144 AUDIT REPORT — ROBERT HALF INC.

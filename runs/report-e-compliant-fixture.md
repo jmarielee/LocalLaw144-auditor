@@ -10,6 +10,8 @@ run and records the two places the auditor did not match it.
 Published because the three real runs produced no PASS on any obligation. This
 is the only run that exercises the PASS path, and the only one that tests
 REF-03's dormant case.
+
+expect: pass — no known defects
 -->
 
 ## Local Law 144 compliance audit — Meridian Talent Partners LLC

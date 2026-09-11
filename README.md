@@ -65,11 +65,27 @@ bound outcomes, and that no bare verdict appears while a blocking referral is op
 
 On the clean run it verifies 18 quotes as verbatim substrings.
 
-**Five runs ship in `runs/`, and three of them fail verification.** Two fail on
-rules they predate; one is a deliberately corrupted copy with four defects
-planted in it, listed at the top of the file so anyone can confirm the verifier
-catches exactly those four and no others. A verifier that passes everything is
-not checking anything.
+**Every report declares in its own header whether it should pass or fail, and
+the verifier judges it against that declaration**, not against passing alone:
+
+```
+runs/report-a-thin-record.md        FAIL  (expected fail)  as declared
+runs/report-b-full-record.md        FAIL  (expected fail)  as declared
+runs/report-c-contaminated.md       FAIL  (expected fail)  as declared
+runs/report-d-tampered.md           FAIL  (expected fail)  as declared
+runs/report-e-compliant-fixture.md  PASS  (expected pass)  as declared
+
+5 of 5 reports behaved as documented.
+```
+
+Four of five fail, on purpose. Two predate rules added after they ran, one is a
+deliberately corrupted copy carrying four planted defects, and one carries a
+defect the auditor itself found and refused to follow — see `TESTING.md`. Every
+failure prints in full above the summary.
+
+**A report that passes when its header says it should fail is itself a
+failure.** That is the check that catches a defect quietly edited out to keep a
+clean board. A verifier that passes everything is not checking anything.
 
 ---
 

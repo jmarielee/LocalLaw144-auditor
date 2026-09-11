@@ -30,6 +30,11 @@
  *   7  GATE       No bare verdict while a blocking referral is open. A held
  *                 verdict is written "FAIL (held — REF-01)".
  *
+ *   The REFERRAL check also enforces cross-referral consistency: a branch may
+ *   not assign a verdict to an obligation another open referral governs unless
+ *   it enumerates against that referral's answers. Added after the resolution
+ *   test caught report-b's REF-01 doing exactly that. See TESTING.md.
+ *
  * Exit code 0 if every report passes, 1 otherwise.
  */
 
@@ -145,6 +150,8 @@ function parseReferral(body) {
 function verify(reportPath) {
   const src = fs.readFileSync(reportPath, 'utf8');
   const { findings, referrals } = parseBlocks(src);
+  const expectM = src.match(/^expect:\s*(pass|fail)\s*(?:—|-)?\s*(.*)$/mi);
+  const expect = expectM ? { status: expectM[1].toLowerCase(), why: expectM[2].trim() } : null;
   const fail = [];
   const pass = [];
 
@@ -233,6 +240,36 @@ function verify(reportPath) {
         bad = true;
       }
     }
+    // Cross-referral consistency. A branch may not assign a verdict to an
+    // obligation that another referral in this report also governs, unless it
+    // enumerates against that referral's answers. Found by running the
+    // resolution test: REF-01 in report-b asserts FAIL on two obligations that
+    // REF-03 can resolve NOT APPLICABLE, without enumerating against REF-03.
+    for (const b of r.branches) {
+      const assigned = [];
+      for (const m of b.outcome.matchAll(/((?:F-\d+(?:\s*,\s*|\s+and\s+)?)+)\s*(?:become|becomes|resolve|resolves|takes?)\s+(NOT APPLICABLE|PASS|FAIL|REFERRED)/gi)) {
+        for (const id of m[1].match(/F-\d+/g) || []) assigned.push(id.toUpperCase());
+      }
+      if (!assigned.length) continue;
+      for (const fid of assigned) {
+        const f = findings.find(x => (x.id || '').trim().toUpperCase() === fid);
+        if (!f) continue;
+        const governedBy = new Set();
+        for (const other of referrals) {
+          if (other.id === r.id) continue;
+          const govs = other.branches.some(ob => new RegExp(`\\b${(f.obligation || '').trim()}\\b`, 'i').test(ob.outcome))
+            || new RegExp(`\\b${other.id}\\b`).test(f.verdict || '');
+          if (govs && /OPEN/i.test(other.status || '')) governedBy.add(other.id);
+        }
+        for (const g of governedBy) {
+          if (!new RegExp(`\\b${g}\\b`).test(b.outcome)) {
+            fail.push(['REFERRAL', `${r.id}: branch "if ${b.cond}" assigns ${fid} (${(f.obligation || '').trim()}) a verdict, but ${g} also governs it and is OPEN. Enumerate against ${g} or leave it REFERRED.`]);
+            bad = true;
+          }
+        }
+      }
+    }
+
     if (!bad) refOK++;
   }
   if (refOK) pass.push(`REFERRAL  ${refOK} referral(s) carry all five fields with bound outcomes`);
@@ -273,10 +310,12 @@ function verify(reportPath) {
     fail.push(['CONCLUSION', `report states a legal conclusion: "${line.trim().slice(0, 90)}..."`]);
   }
 
-  return { fail, pass, findings: findings.length, referrals: referrals.length };
+  return { fail, pass, expect, findings: findings.length, referrals: referrals.length };
 }
 
 // -------------------------------------------------------------------- main
+
+function expectKnown(res) { return res.expect && (res.expect.status === 'pass' || res.expect.status === 'fail'); }
 
 function main() {
   const arg = process.argv[2];
@@ -294,6 +333,7 @@ function main() {
   console.log('='.repeat(70));
 
   let anyFail = false;
+  const summary = [];
   for (const r of reports) {
     console.log(`\n${path.relative(ROOT, r)}`);
     console.log('-'.repeat(70));
@@ -303,20 +343,49 @@ function main() {
 
     console.log(`  ${res.findings} findings, ${res.referrals} referrals\n`);
     for (const p of res.pass) console.log(`  ok    ${p}`);
+    const actual = res.fail.length ? 'fail' : 'pass';
     if (res.fail.length) {
       console.log('');
       for (const [check, msg] of res.fail) console.log(`  FAIL  [${check}] ${msg}`);
       console.log(`\n  ${res.fail.length} failure(s).`);
-      anyFail = true;
     } else {
       console.log('\n  All checks passed.');
+    }
+
+    // A report is judged against what it declares, not against pass alone.
+    // Several reports here are SUPPOSED to fail: two predate rules, one is
+    // deliberately corrupted, one carries a documented defect. What matters is
+    // whether each behaved as its own header says it will. A report that passes
+    // when the manifest says it should fail is itself a failure — that is what
+    // catches a defect quietly edited out to keep a clean board.
+    if (!expectKnown(res)) {
+      console.log(`\n  NOTE  no expect: line in this report's header; cannot judge against a declaration.`);
+      summary.push({ name: path.relative(ROOT, r), actual, expected: '?', ok: false });
+      anyFail = true;
+    } else if (actual === res.expect.status) {
+      console.log(`\n  AS DECLARED  header says expect: ${res.expect.status}${res.expect.why ? ' — ' + res.expect.why : ''}`);
+      summary.push({ name: path.relative(ROOT, r), actual, expected: res.expect.status, ok: true });
+    } else {
+      console.log(`\n  UNEXPECTED   header says expect: ${res.expect.status}, but this report ${actual === 'pass' ? 'passed' : 'failed'}.`);
+      if (actual === 'pass') console.log('               A report that passes when it is documented to fail has been edited,\n               or the check that caught it has been weakened.');
+      summary.push({ name: path.relative(ROOT, r), actual, expected: res.expect.status, ok: false });
+      anyFail = true;
     }
   }
 
   console.log('\n' + '='.repeat(70));
+  console.log('SUMMARY — each report against its own declaration\n');
+  const w = Math.max(...summary.map(s => s.name.length));
+  for (const s of summary) {
+    console.log(`  ${s.name.padEnd(w)}  ${s.actual.toUpperCase().padEnd(5)} (expected ${s.expected})  ${s.ok ? 'as declared' : 'UNEXPECTED'}`);
+  }
+  const okCount = summary.filter(s => s.ok).length;
+  console.log('');
+  console.log(`  ${okCount} of ${summary.length} reports behaved as documented.`);
+  console.log('');
   console.log(anyFail
-    ? 'Some reports failed verification. Reports predating a rules.md change are\nexpected to fail; see the header comment in each file for its conditions.'
-    : 'All reports passed.');
+    ? 'Some reports did not behave as declared. Every failure is printed above.'
+    : 'Every report behaved as its header declares. Failures shown above are the\ndocumented ones: two runs predate rules, one is deliberately corrupted, one\ncarries a defect the auditor itself found. See TESTING.md.');
   process.exit(anyFail ? 1 : 0);
 }
 

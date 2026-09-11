@@ -144,3 +144,107 @@ resolver, not in the report.
 
 ---
 
+
+
+---
+
+## The resolution test — three tools disagreed, and the auditor was right
+
+`rules.md` claims a referral's outcomes are committed before the answer arrives,
+so a human supplies one input rather than re-opening the judgement. That claim
+was tested by answering `REF-01` twice over, by two independent paths, and
+comparing.
+
+**Path 1 — `resolve.js`.** A script with no model, no network and no access to
+the evidence, applying Run B's branches exactly as written:
+
+```
+node resolve.js runs/report-b-full-record.md REF-01=YES
+→ 4 FAIL · 1 NOT APPLICABLE · 6 REFERRED
+```
+
+**Path 2 — the auditor.** A fresh chat, the folder, Run B, and the answer in
+plain words. Result in `runs/report-b-resolved.md`:
+
+```
+→ 2 FAIL · 1 NOT APPLICABLE · 8 REFERRED
+```
+
+**They diverged on `SUMMARY-PUBLIC` and `SUMMARY-CONTENT`, and the auditor was
+right.**
+
+`REF-01`'s YES branch in Run B says those two become FAIL. They cannot. Both are
+also governed by `REF-03`, the conditional duration referral, which is open — and
+`REF-03`'s second branch resolves both NOT APPLICABLE if the tool was last used
+more than six months ago. `REF-01`'s branch asserted a verdict under one of
+`REF-03`'s answers without enumerating against the other.
+
+That is precisely what the dependent-branch rule forbids: *a branch may defer to
+another referral only by enumeration — it must name the verdict under every
+combination.* Run B was produced before that rule existed. Its `REF-01` branch is
+defective, and the auditor refused to follow it:
+
+> `rules.md` says an obligation governed by an open referral is REFERRED, full
+> stop — that rule beats a sentence inside a referral.
+
+## What each tool did, and why the ranking matters
+
+| | Behaviour on the defective branch |
+| --- | --- |
+| `verify.js` | **Passed it.** It checks that a branch names a verdict, not that the verdict is consistent with other referrals governing the same obligation. |
+| `resolve.js` | **Applied it faithfully.** Faithful application is the whole of what it does; a resolver that second-guesses a branch is doing the judging the branch was supposed to have already done. |
+| The auditor | **Caught it**, named the rule it violated, and declined. |
+
+The claim under test was that a pre-commitment is binding. What the test actually
+established is narrower and more useful: **the rules outrank the branches.** A
+commitment written into a report does not override the governing rule, and the
+auditor enforced that hierarchy against its own prior output.
+
+Two further things it did unprompted, both recorded in the resolved report: it
+refused to aggregate three live verdicts into any summary, because six referrals
+remained open; and it recorded that the answer was held as the operator's
+assertion, not verified against a public source — noting that if withdrawn, the
+live verdicts return to REFERRED.
+
+## The check `verify.js` was missing
+
+This divergence exposed a gap in the verifier, now closed. It previously accepted
+any branch that named a legal verdict. It now also fails a branch that assigns a
+verdict to an obligation which another referral in the same report governs,
+unless the branch enumerates against that referral's answers.
+
+`runs/report-b-full-record.md` now fails this check, on exactly the two
+obligations the auditor identified:
+
+```
+FAIL [REFERRAL] REF-01: branch "if YES" assigns F-02 (SUMMARY-PUBLIC) a verdict,
+     but REF-03 also governs it and is OPEN. Enumerate against REF-03 or leave
+     it REFERRED.
+FAIL [REFERRAL] REF-01: branch "if YES" assigns F-04 (SUMMARY-CONTENT) a verdict,
+     but REF-03 also governs it and is OPEN.
+```
+
+That is correct, and Run B is **not** being amended to hide it. The defect is
+real, it is in a published run, and a repo that quietly edits its own history to
+keep a clean board is the thing this folder exists to argue against. Run D
+inherits the same two failures, since it is a copy of B.
+
+The verifier that produced Run B's clean bill of health on Thursday now fails it.
+That is the check improving, not the report degrading.
+
+## Bugs found while building this check
+
+Two, both mine, both recorded because the pattern is the same one that keeps
+recurring — a check that runs and reports nothing looks exactly like a check
+that passes.
+
+**The list regex read only the last ID.** The branch says "F-02, F-03, F-04 and
+F-11 become FAIL"; only F-11 sits next to the verb, so the first version caught
+F-11 alone and Run B passed. The new check existed and found nothing, which read
+as Run B being clean.
+
+**The resolution output was verified as an audit report.** `resolve.js`'s output
+records only the obligations that went live, so checking it for full coverage
+reported eight obligations "absent" that were never meant to be there. It is now
+named `resolution-b-REF-01-YES.md` rather than `report-*`, so the verifier does
+not treat it as something it is not.
