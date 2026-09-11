@@ -79,7 +79,7 @@ Then:
 Audit <employer> against Local Law 144.
 ```
 
-Give it an employer that hires into New York. You do not need their permission.
+Give it an employer that hires into New York City. You do not need their permission.
 
 You get a finding per obligation, each citing a provision ID that resolves to a
 file and line in `reference/`, each recording what was searched, where, and on
@@ -171,7 +171,7 @@ APPLICABLE.
 
 ## What it audits, and what it refuses to
 
-Four obligations, all publicly checkable. Each is checked as several separate
+Four obligations, audited from the public record. Where compliance can’t be established publicly, the auditor refers rather than guesses. Each is checked as several separate
 provisions, eleven in total — the full list is the "Audited obligations" table in
 `reference/provisions.md`, and every report reports all eleven:
 
