@@ -247,7 +247,7 @@ that only summarises the standard. `verify.js` now parses the table out of
 absorbed any number of new defects without the board changing. Demonstrated by
 pasting an invented provision — a certification requirement that appears nowhere
 in NYC law — into Run B: the failure list grew, and the summary still printed
-"5 of 5 reports behaved as documented" and exited 0. The declaration now carries
+"6 of 6 reports behaved as documented" and exited 0. The declaration now carries
 a count, `expect: fail (11)`, and a report that produces a different number of
 failures than it declares is `UNEXPECTED` in either direction. More failures
 means a new defect entered. Fewer means a documented defect was edited out or a
