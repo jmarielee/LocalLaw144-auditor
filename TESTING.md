@@ -8,7 +8,7 @@ against a synthetic fixture built to comply, one deliberately corrupted.
 | A | Thin evidence: pages pasted in, no search record, no URLs, no times | Findings produced; the auditor wrote its own Search-record integrity note limiting every absence finding to the seven documents supplied |
 | B | Full evidence record, fresh chat, nothing preceding it | Passed clean when it ran. Now fails on eleven defects that later checks exposed. Not amended — see below |
 | C | Full evidence record, but run in the chat containing Run A's report | **Discounted.** Not a clean test of the folder; published labelled |
-| D | Not a run. A copy of B with four defects planted in it | Fails on exactly those four, and nothing else |
+| D | Not a run. A copy of B with four defects planted in it | Fails on those four plus every defect Run B already carried — sixteen in total |
 | E | Synthetic employer built to comply, fresh chat | Eleven PASS, zero NOT APPLICABLE, zero FAIL; passes verification. The answer key predicted nine PASS and one NOT APPLICABLE — the auditor diverged on `SUMMARY-LINK` and was right; see the addendum in `fixture-compliant-EXPECTED.md` |
 
 **No fabrications.** Every checkable detail in Run A — URLs, document dates,
