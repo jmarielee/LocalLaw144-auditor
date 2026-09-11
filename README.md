@@ -123,7 +123,7 @@ runs/report-c-contaminated.md       FAIL:18 (expected fail:18)  as declared
 runs/report-d-tampered.md           FAIL:16 (expected fail:16)  as declared
 runs/report-e-compliant-fixture.md  PASS    (expected pass)     as declared
 
-5 of 5 reports behaved as documented.
+6 of 6 reports behaved as documented.
 ```
 
 A declaration carries a **count**, not just a direction. `expect: fail (11)` means
@@ -131,7 +131,7 @@ eleven known defects, and the board goes red if it finds ten or twelve. Without
 the count, a report documented to fail absorbs any number of new ones — which it
 did, until submission day. See `TESTING.md`.
 
-Four of five fail, on purpose. Two predate rules added after they ran, one is a
+Four of six fail, on purpose. Two predate rules added after they ran, one is a
 deliberately corrupted copy carrying four planted defects, and one carries
 defects the auditor itself found and refused to edit out — see `TESTING.md`.
 Every failure prints in full above the summary.
