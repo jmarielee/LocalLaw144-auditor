@@ -21,16 +21,16 @@ concern artifacts the law requires to exist in public.
 | ID | Provision | Cite |
 | --- | --- | --- |
 | `AUDIT-CURRENCY` | Bias audit conducted no more than one year prior to use | `admin-20-871-requirements.md:L21` |
-| `SUMMARY-PUBLIC` | Summary of results and distribution date publicly available on website before use | `admin-20-871-requirements.md:L24` |
+| `SUMMARY-PUBLIC` | Summary of results and distribution date publicly available on website before use | `admin-20-871-requirements.md:L23` |
 | `SUMMARY-LOCATION` | Summary must sit on the employment section of the website, clear and conspicuous | `rcny-5-303-published-results.md:L18` |
 | `SUMMARY-CONTENT` | Required contents of the published summary | `rcny-5-303-published-results.md:L21` |
-| `SUMMARY-LINK` | Hyperlink permitted only if clearly identified as the bias-audit results | `rcny-5-303-published-results.md:L29` |
+| `SUMMARY-LINK` | Hyperlink permitted only if clearly identified as the bias-audit results | `rcny-5-303-published-results.md:L28` |
 | `NOTICE-USE` | Notice that an AEDT will be used, ≥10 business days before use | `admin-20-871-requirements.md:L31` |
 | `NOTICE-QUALS` | Notice of the job qualifications and characteristics assessed | `admin-20-871-requirements.md:L36` |
 | `NOTICE-ALT` | Notice must include instructions for requesting an alternative process or accommodation | `rcny-5-304-notice.md:L18` |
 | `NOTICE-METHOD` | Permitted delivery methods for candidate notice | `rcny-5-304-notice.md:L26` |
-| `DATA-DISCLOSURE` | Data type, source and retention policy on site, or on written request within 30 days | `admin-20-871-requirements.md:L42` |
-| `DATA-WEBPOST` | Data policy information and request instructions posted on the employment section | `rcny-5-304-notice.md:L44` |
+| `DATA-DISCLOSURE` | Data type, source and retention policy on site, or on written request within 30 days | `admin-20-871-requirements.md:L40` |
+| `DATA-WEBPOST` | Data policy information and request instructions posted on the employment section | `rcny-5-304-notice.md:L43` |
 
 ## Definitional provisions
 
