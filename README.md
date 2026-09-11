@@ -237,9 +237,7 @@ Local Law 144 only. Not Title 8, not EEOC guidance, not the Illinois or Colorado
 AI hiring statutes, not the EU AI Act.
 
 Not legal advice. Not a conformity assessment. Not a bias audit. Not a
-certification. This is a documented comparison of what an employer has published
-against what a published law requires them to publish, on a stated date, from
-public sources only.
+certification. This is a documented comparison of publicly observable employer disclosures against Local Law 144 and the DCWP rules, on a stated date, from public sources only.
 
 A clean report means the four obligations were checked and found satisfied on that
 date. It does not mean an employer is compliant with Local Law 144, and it never
