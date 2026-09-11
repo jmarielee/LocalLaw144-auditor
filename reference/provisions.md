@@ -61,7 +61,7 @@ human has answered the referral that cites it.
 
 | ID | Provision | Cite | Fires when |
 | --- | --- | --- | --- |
-| `SUMMARY-DURATION` | Summary must stay posted at least 6 months after latest use | `rcny-5-303-published-results.md:L33` | `SUMMARY-PUBLIC` = FAIL |
+| `SUMMARY-DURATION` | Summary must stay posted at least 6 months after latest use | `rcny-5-303-published-results.md:L32` | `SUMMARY-PUBLIC` = FAIL |
 
 ## Severity anchors
 
