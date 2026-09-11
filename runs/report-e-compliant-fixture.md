@@ -8,7 +8,7 @@ fixture-compliant-EXPECTED.md for the prediction, which was written before this
 run and records the two places the auditor did not match it.
 
 Published because the three real runs produced no PASS on any obligation. This
-is the only run that exercises the PASS path, and the only one that tests
+is the only run that tests
 REF-03's dormant case.
 
 runs/report-f-accenture.md is a live run against a real subject that publishes a substantive New York disclosure — the first report in which passes and failures appear together: seven PASS, two FAIL, two REFERRED.
