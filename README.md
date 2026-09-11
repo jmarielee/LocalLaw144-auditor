@@ -14,6 +14,36 @@ to be.
 
 ---
 
+## Read this before you run it
+
+**On a real employer, this auditor returns no verdict. That is the result, not a
+limitation.**
+
+Whether Local Law 144 applies at all turns on `AEDT-DEF-SUBST` — the three prongs
+of "substantially assist or replace discretionary decision making." Each one asks
+how an employer weights a tool's output inside its own hiring process. That is a
+fact about deployment, not about software, and nobody outside the company can
+observe it. Any auditor that hands you a confident verdict off a public record
+has guessed at it.
+
+This one refuses to. It opens `REF-01`, commits both answers in advance, and
+holds every obligation behind it. The report reads `AWAITING HUMAN
+DETERMINATION`, and one human answer resolves it:
+
+```
+node resolve.js runs/report-b-full-record.md REF-01=YES
+node resolve.js runs/report-b-full-record.md REF-01=NO
+```
+
+Both outcomes were written before the answer arrived. See **[METHOD.md](METHOD.md)**.
+
+`runs/report-e-compliant-fixture.md` shows the pass path end to end, against a
+constructed compliant subject — no cooperating real employer was available, and
+a fixture is the honest way to demonstrate a clean run rather than manufacture
+one.
+
+---
+
 ## Why it matters
 
 §20-872 sets a civil penalty of up to $500 for a first violation and $500–$1,500
@@ -28,8 +58,21 @@ positions in the city, or candidates who reside there, wherever the employer sit
 
 ## Use it
 
-Create a Claude project, add every file in this folder, and set the project
-instructions to exactly this:
+Create a Claude project and add these four:
+
+```
+identity.md
+rules.md
+examples.md
+reference/
+```
+
+Those are the auditor. Everything else in this repo — `runs/`, `TESTING.md`,
+`METHOD.md`, `verify.js`, `resolve.js` — is evidence for a reader and should stay
+out of the project, both to keep the context budget for the standard and so the
+model has no completed report to imitate.
+
+Set the project instructions to exactly this:
 
 > You are the auditor defined in identity.md. Follow rules.md exactly, in the
 > order it specifies. Every finding cites a provision ID from
@@ -44,9 +87,9 @@ Audit <employer> against Local Law 144.
 
 Give it an employer that hires into New York. You do not need their permission.
 
-You get a verdict per obligation including the passes, every finding citing a
-provision ID that resolves to a file and line in `reference/`, every search
-recorded with its locations and date, and any open Bound Referrals.
+You get a finding per obligation, each citing a provision ID that resolves to a
+file and line in `reference/`, each recording what was searched, where, and on
+what date. Verdicts are held while `REF-01` is open — see above.
 
 ---
 
@@ -57,13 +100,16 @@ node verify.js
 ```
 
 No install, no network, no dependencies. It reads every report in `runs/` and
-checks that quotes are verbatim substrings of the provisions they cite, that
-cited line numbers resolve, that every obligation is reported exactly once, that
-severity recomputes from the mapping in `rules.md`, that conditional referrals
-fire when their conditions are met, that referrals carry all five fields with
-bound outcomes, and that no bare verdict appears while a blocking referral is open.
+checks that quotes are verbatim substrings of the reference file they cite, that
+cited line numbers land inside the file on a non-empty line, that **every quote
+begins on the line it cites** rather than merely occurring somewhere in the file,
+that every obligation is reported exactly once, that severity recomputes from the
+mapping in `rules.md`, that a conditional referral fires when its condition is
+met, that referrals carry all five fields with bound outcomes, and that no bare
+verdict appears while a blocking referral is open.
 
-On the clean run it verifies 18 quotes as verbatim substrings.
+Run B verifies 18 quotes. Run E, the fixture, verifies 13 and anchors all 13 to
+their cited line.
 
 **Every report declares in its own header whether it should pass or fail, and
 the verifier judges it against that declaration**, not against passing alone:
@@ -79,13 +125,17 @@ runs/report-e-compliant-fixture.md  PASS  (expected pass)  as declared
 ```
 
 Four of five fail, on purpose. Two predate rules added after they ran, one is a
-deliberately corrupted copy carrying four planted defects, and one carries a
-defect the auditor itself found and refused to follow — see `TESTING.md`. Every
-failure prints in full above the summary.
+deliberately corrupted copy carrying four planted defects, and one carries
+defects the auditor itself found and refused to edit out — see `TESTING.md`.
+Every failure prints in full above the summary.
 
 **A report that passes when its header says it should fail is itself a
 failure.** That is the check that catches a defect quietly edited out to keep a
 clean board. A verifier that passes everything is not checking anything.
+
+The anchor check was added on submission day, after a finding was found to pass
+while citing a line its quote did not appear on. It immediately found five
+citation defects in Run B. They are still on the board. `TESTING.md` says why.
 
 ---
 
@@ -133,10 +183,7 @@ published; it sets no threshold. A low ratio is not a violation of this law.
 **It never concludes anyone broke the law.** It reports what it observed and
 where. The conclusion is a tribunal's.
 
-**It does not decide whether the law applies.** Whether a tool is an AEDT turns on
-§5-300 — how an employer weights the output in its own process. That is not
-publicly observable, so it is always a referral, and it blocks everything. See
-**[METHOD.md](METHOD.md)**.
+**It does not decide whether the law applies.** See the top of this file.
 
 ---
 
@@ -166,9 +213,9 @@ accounts of this law disagree with each other.
 | --- | --- |
 | `identity.md` | Who the auditor is, what it enforces, what it refuses |
 | `rules.md` | The passes, the finding format, severity, the gate |
-| `examples.md` | Two real audits, with what to notice in each |
+| `examples.md` | Worked examples, with what to notice in each |
 | `METHOD.md` | Bound Referrals — the mechanism, in full |
-| `TESTING.md` | Five runs, what broke, and the three bugs in the verifier |
+| `TESTING.md` | Five runs, what broke, and the four gaps found in the verifier |
 | `runs/` | Five reports, the evidence records, the answer key, the screening log |
 | `verify.js` | The checker |
 | `resolve.js` | Answers a referral and computes what follows |
