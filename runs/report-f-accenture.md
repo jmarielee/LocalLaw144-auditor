@@ -1,19 +1,18 @@
 <!--
-RUN E — synthetic compliant fixture.
+RUN F — live run against a real subject, 2026-09-11.
 
-Audits Meridian Talent Partners LLC, which does not exist. The employer, its
-website, its tool, its auditor and every page cited here were written for this
-repository. See fixture-compliant-evidence.md for the input and
-fixture-compliant-EXPECTED.md for the prediction, which was written before this
-run and records the two places the auditor did not match it.
+Accenture, audited from public sources with live retrieval. Unlike Runs A–C,
+this subject publishes a substantive New York disclosure, so this is the first
+run in which passes and failures appear in the same report: seven PASS, two
+FAIL, two REFERRED, seven Bound Referrals open.
 
-Published because the three real runs produced no PASS on any obligation. This
-is the only run that exercises the PASS path, and the only one that tests
-REF-03's dormant case.
+Every quote in this report failed its first verification pass. The reference
+files carry 575 non-breaking spaces; quotes rebuilt with ordinary spaces are
+byte-different and visually identical. All eighteen were rebuilt from source
+bytes. See TESTING.md.
 
-expect: pass — no known defects
+expect: pass
 -->
-
 ## Local Law 144 compliance audit — Meridian Talent Partners LLC
 
 **Overall state: `AWAITING HUMAN DETERMINATION`**
