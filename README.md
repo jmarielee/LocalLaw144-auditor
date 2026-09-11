@@ -2,15 +2,10 @@
 
 **An auditor for New York City Local Law 144, the AI hiring law.**
 
-Drop this folder into a Claude project. It checks whether an employer has
-published the four things the law requires to exist in public, and reports what
-it observed, where it looked, and on what date — every finding citing a provision
-that ships verbatim in `reference/`.
+Drop this folder into a Claude project. It checks an employer’s public-facing Local Law 144 disclosures against the law and DCWP rules, and reports what it found, where it looked, and on what date. Every finding cites a provision that ships verbatim in `reference/`.
 
-It audits **from the outside**. No evidence pack, no questionnaire, no
-cooperation from the audited party. Local Law 144 is a transparency statute, so
-compliance *is* publication: the evidence is public because the law says it has
-to be.
+It audits **from the outside,** using only publicly available evidence. Where the law allows something that cannot be verified from the public record, the auditor does not guess. It refers the question for human determination.
+
 
 ---
 
@@ -51,8 +46,7 @@ for each subsequent one. Two provisions turn that into real money: **§20-872(b)
 makes *each day* of non-compliant use a separate violation, and **§20-872(c)**
 makes a failure of notice a separate violation from the use conditions.
 
-The law binds any employer or employment agency screening candidates for
-positions in the city, or candidates who reside there, wherever the employer sits.
+The law covers AEDT screening for employment or promotion within New York City. Its notice requirements apply to covered candidates and employees who reside in the city.
 
 ---
 
@@ -230,8 +224,8 @@ accounts of this law disagree with each other.
 | `rules.md` | The passes, the finding format, severity, the gate |
 | `examples.md` | Worked examples, with what to notice in each |
 | `METHOD.md` | Bound Referrals — the mechanism, in full |
-| `TESTING.md` | Five runs, what broke, and every gap found in the verifier so far |
-| `runs/` | Five reports, the evidence records, the answer key, the screening log |
+| `TESTING.md` | Six runs, what broke, and every gap found in the verifier so far |
+| `runs/` | Six reports, the evidence records, the answer key, the screening log |
 | `verify.js` | The checker |
 | `resolve.js` | Answers a referral and computes what follows |
 
