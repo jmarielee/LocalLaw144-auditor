@@ -164,7 +164,7 @@ id:         F-11
 obligation: DATA-WEBPOST
 verdict:    FAIL
 severity:   DISCRETE
-provision:  rcny-5-304-notice.md:L44
+provision:  rcny-5-304-notice.md:L43
 quote:      (1)   Provide information on the employment section of its website
             in a clear and conspicuous manner about its AEDT data retention
             policy, the type of data collected for the AEDT, and the source of
