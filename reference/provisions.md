@@ -44,8 +44,8 @@ question is settled by a human.
 
 | ID | Provision | Cite |
 | --- | --- | --- |
-| `AEDT-DEF-TOOL` | Base definition of "automated employment decision tool" | `admin-20-870-definitions.md:L21` |
-| `AEDT-DEF-EXCLUDE` | Express exclusions from the AEDT definition | `admin-20-870-definitions.md:L26` |
+| `AEDT-DEF-TOOL` | Base definition of "automated employment decision tool" | `admin-20-870-definitions.md:L20` |
+| `AEDT-DEF-EXCLUDE` | Express exclusions from the AEDT definition | `admin-20-870-definitions.md:L25` |
 | `AEDT-DEF-EMPDEC` | "Employment decision" = screening for hiring or promotion within the city | `admin-20-870-definitions.md:L38` |
 | `AEDT-DEF-SUBST` | The three prongs of "substantially assist or replace discretionary decision making" | `rcny-5-300-definitions.md:L23` |
 | `AEDT-DEF-OUTPUT` | "Simplified output" — score, tag, categorisation, recommendation, ranking | `rcny-5-300-definitions.md:L102` |
@@ -71,9 +71,9 @@ and a single missing notice are not the same finding.
 
 | ID | Provision | Cite |
 | --- | --- | --- |
-| `PENALTY-TIER` | Civil penalty tiers | `admin-20-872-penalties.md:L19` |
+| `PENALTY-TIER` | Civil penalty tiers | `admin-20-872-penalties.md:L18` |
 | `PENALTY-DAILY` | Each day of violating use is a separate violation | `admin-20-872-penalties.md:L23` |
-| `PENALTY-NOTICE` | Failure to notify is a separate violation | `admin-20-872-penalties.md:L29` |
+| `PENALTY-NOTICE` | Failure to notify is a separate violation | `admin-20-872-penalties.md:L27` |
 
 ## Out of scope — shipped so the boundary is checkable
 
