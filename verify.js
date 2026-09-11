@@ -16,18 +16,22 @@
  *                 the failure this whole folder exists to refuse.
  *   2  LINE       Every cited line number lands inside its file and on a
  *                 non-empty line.
- *   3  COVERAGE   Every audited obligation in reference/provisions.md appears
+ *   3  ANCHOR     Every quote begins on the line it cites, not merely
+ *                 somewhere in the file. QUOTE and LINE are independent
+ *                 checks; a finding can cite a line its quote does not
+ *                 appear on and still pass both. This closes that gap.
+ *   4  COVERAGE   Every audited obligation in reference/provisions.md appears
  *                 exactly once. A skipped obligation looks exactly like
  *                 thoroughness unless something counts them.
- *   4  SEVERITY   Every severity recomputes from the mapping in rules.md.
+ *   5  SEVERITY   Every severity recomputes from the mapping in rules.md.
  *                 Severity is read off §20-872, not assigned by judgement.
- *   5  REF-03     If SUMMARY-PUBLIC is FAIL, the conditional referral REF-03
+ *   6  REF-03     If SUMMARY-PUBLIC is FAIL, the conditional referral REF-03
  *                 must be present. A conditional whose condition is met and
  *                 which was not written is a skipped step.
- *   6  REFERRAL   Every referral carries all five fields, and every branch
+ *   7  REFERRAL   Every referral carries all five fields, and every branch
  *                 either names a legal verdict or enumerates one for every
  *                 combination of another referral's answers.
- *   7  GATE       No bare verdict while a blocking referral is open. A held
+ *   8  GATE       No bare verdict while a blocking referral is open. A held
  *                 verdict is written "FAIL (held — REF-01)".
  *
  *   The REFERRAL check also enforces cross-referral consistency: a branch may
@@ -159,6 +163,7 @@ function verify(reportPath) {
 
   // --- 1 & 2: quotes and line numbers -------------------------------------
   let quotesOK = 0;
+  let anchorsOK = 0;
   for (const f of [...findings, ...referrals]) {
     if (!f.provision || !f.quote) continue;
     const cite = f.provision.match(/([a-z0-9-]+\.md):L(\d+)/);
@@ -174,8 +179,26 @@ function verify(reportPath) {
 
     if (norm(text).includes(norm(f.quote))) { quotesOK++; }
     else fail.push(['QUOTE', `${f.id}: quote is not a verbatim substring of ${file}\n        quote: "${norm(f.quote).slice(0, 90)}..."`]);
+
+    // --- 3: anchor — the quote must begin on the line it cites -------------
+    if (ln >= 1 && ln <= lines.length) {
+      const q = norm(f.quote);
+      const A = norm(lines.slice(ln - 1).join('\n'));
+      const B = ln < lines.length ? norm(lines.slice(ln).join('\n')) : '';
+      if (q && A.includes(q) && !B.includes(q)) {
+        anchorsOK++;
+      } else if (q) {
+        let actual = null;
+        for (let k = lines.length; k >= 1; k--) {
+          if (norm(lines.slice(k - 1).join('\n')).includes(q)) { actual = k; break; }
+        }
+        const where = actual ? `the quote begins at ${file}:L${actual}` : `the quote does not begin on any line of ${file}`;
+        fail.push(['ANCHOR', `${f.id}: cites ${file}:L${ln}, but ${where}`]);
+      }
+    }
   }
   if (quotesOK) pass.push(`QUOTE     ${quotesOK} quote(s) verified verbatim against reference/`);
+  if (anchorsOK) pass.push(`ANCHOR    ${anchorsOK} quote(s) verified to begin on the line they cite`);
 
   // --- 3: coverage --------------------------------------------------------
   const required = auditedObligations();

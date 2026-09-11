@@ -119,6 +119,41 @@ first two, and this one, are fixed.
 
 ---
 
+## A fourth gap, found on submission day
+
+`QUOTE` confirmed a quote appears somewhere in the cited file. `LINE`
+confirmed the cited line number is in range and non-blank. The two checks
+were independent, so nothing confirmed the quote appears *on the line it
+cites*. A finding could point at any line in the right file and still verify
+clean, so long as the quote occurred anywhere else in that file. Demonstrable
+by pointing a finding at an unrelated line number and watching the verifier
+report all checks passed.
+
+`ANCHOR` closes it: the quote must begin on the cited line, not merely occur
+somewhere in the file.
+
+Running it found five defects in Run B, not two. `F-10` cited `L42` where the
+quote begins at `L40`, and `F-11` cited `L44` where the quote begins at `L43`
+— plain off-by-one citations on findings. `REF-03`, `REF-05` and `REF-06` are
+a further three: referral citations whose quote does not begin on the line
+the referral cites either.
+
+`REF-03`'s error traces to the same index row that produced F-10 and F-11's:
+`reference/provisions.md`'s `SUMMARY-DURATION` row cited `L33`, but the text
+its own quote reproduces — "(c) An employer or employment agency must keep
+the summary of results and…" — begins at `L32`. That row is corrected. `F-10`
+and `F-11`'s rows (`DATA-WEBPOST`, `DATA-DISCLOSURE`) were corrected
+earlier, the same way. `REF-05` and `REF-06` cite a different pattern —
+`provision:` names the top of the enumerated clause the quote is drawn from,
+and the quoted fragment itself starts partway into it — and neither traces to
+an index row error.
+
+The index is corrected. The runs are left exactly as they ran, because
+editing a past report to clear a board is the failure this folder exists to
+refuse.
+
+---
+
 ## The claim that had never been tested
 
 `rules.md` says a referral's outcomes are committed before the answer arrives,
