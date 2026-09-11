@@ -63,9 +63,36 @@ severity recomputes from the mapping in `rules.md`, that conditional referrals
 fire when their conditions are met, that referrals carry all five fields with
 bound outcomes, and that no bare verdict appears while a blocking referral is open.
 
-On the clean run it verifies 18 quotes as verbatim substrings. **Two of the three
-published runs fail** — on rules they predate. A verifier that passes everything
-is not checking anything.
+On the clean run it verifies 18 quotes as verbatim substrings.
+
+**Five runs ship in `runs/`, and three of them fail verification.** Two fail on
+rules they predate; one is a deliberately corrupted copy with four defects
+planted in it, listed at the top of the file so anyone can confirm the verifier
+catches exactly those four and no others. A verifier that passes everything is
+not checking anything.
+
+---
+
+## Resolve a referral
+
+```
+node resolve.js runs/report-b-full-record.md REF-01=YES
+node resolve.js runs/report-b-full-record.md REF-01=NO
+```
+
+`rules.md` claims a referral's outcomes are committed before the answer arrives,
+so a human supplies one input rather than re-opening the judgement. This is the
+command that tests the claim.
+
+It reads the branches exactly as the report wrote them, applies the answer, and
+prints the resolved verdict for every obligation. No model, no network, no access
+to the evidence. It cannot reach a verdict the report did not commit to in
+advance — and where a branch cannot be applied without interpreting it, it says
+so rather than guessing.
+
+Same report, two answers, two determinate outcomes: YES gives four FAIL, one NOT
+APPLICABLE and six still governed by their own referrals; NO gives eleven NOT
+APPLICABLE.
 
 ---
 
@@ -125,9 +152,10 @@ accounts of this law disagree with each other.
 | `rules.md` | The passes, the finding format, severity, the gate |
 | `examples.md` | Two real audits, with what to notice in each |
 | `METHOD.md` | Bound Referrals — the mechanism, in full |
-| `TESTING.md` | Three runs, no fabrications, and the four things that broke |
-| `runs/` | The reports, the evidence record, the screening log |
+| `TESTING.md` | Five runs, what broke, and the three bugs in the verifier |
+| `runs/` | Five reports, the evidence records, the answer key, the screening log |
 | `verify.js` | The checker |
+| `resolve.js` | Answers a referral and computes what follows |
 
 ---
 

@@ -363,6 +363,12 @@ thoroughness unless something checks for it.
 
 ## The gate
 
+**A referral that blocks is marked `BLOCKING` on its header line**, after its
+label. The scope referral always carries it. Without the marker a reader cannot
+tell a blocking referral from an ordinary one, and neither can a verifier — a
+report whose findings are written as held but which marks no referral `BLOCKING`
+is incoherent and fails verification.
+
 While any referral is `OPEN`, the report's overall state is
 `AWAITING HUMAN DETERMINATION`.
 

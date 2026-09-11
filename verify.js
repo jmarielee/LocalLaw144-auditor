@@ -216,14 +216,19 @@ function verify(reportPath) {
     let bad = false;
     for (const b of r.branches) {
       const namesVerdict = VERDICTS.some(v => b.outcome.toUpperCase().includes(v));
+      // "takes the held verdict recorded against it" is determinate by reference,
+      // but only if every finding actually carries one. Check, don't assume.
+      const byReference = /held verdict recorded against it|verdict recorded against it in this report/i.test(b.outcome)
+        && findings.length > 0
+        && findings.every(f => /\(held/i.test((f.verdict || '')));
       const defersWithEnumeration = /REF-\d+/.test(b.outcome) &&
         (b.outcome.match(new RegExp(VERDICTS.join('|'), 'gi')) || []).length >= 2;
       const vague = /investigate|review further|to be determined|tbd|unclear/i.test(b.outcome);
-      if (vague || (!namesVerdict && !defersWithEnumeration)) {
+      if (vague || (!namesVerdict && !defersWithEnumeration && !byReference)) {
         fail.push(['REFERRAL', `${r.id}: branch "if ${b.cond}" does not reach a named verdict\n        outcome: "${b.outcome.slice(0, 90)}..."`]);
         bad = true;
       }
-      if (/REF-\d+/.test(b.outcome) && !defersWithEnumeration && !namesVerdict) {
+      if (/REF-\d+/.test(b.outcome) && !defersWithEnumeration && !namesVerdict && !byReference) {
         fail.push(['REFERRAL', `${r.id}: branch "if ${b.cond}" defers to another referral without enumerating a verdict for every combination`]);
         bad = true;
       }
@@ -234,6 +239,16 @@ function verify(reportPath) {
 
   // --- 7: the gate --------------------------------------------------------
   const blocking = referrals.filter(r => r.blocking && /OPEN/i.test(r.status || ''));
+  const heldFindings = findings.filter(f => /\(held/i.test(f.verdict || ''));
+  if (!blocking.length && heldFindings.length) {
+    // Held verdicts with no BLOCKING referral is incoherent: something is being
+    // held by nothing. Without this the gate check is skipped in silence, which
+    // reads as a pass. A missing check must never look like a passed one.
+    fail.push(['GATE', `${heldFindings.length} finding(s) carry a held verdict but no referral is marked BLOCKING; the gate cannot be checked. Mark the blocking referral, per rules.md.`]);
+  }
+  if (!blocking.length && !heldFindings.length && referrals.some(r => /OPEN/i.test(r.status || ''))) {
+    fail.push(['GATE', 'referrals are OPEN but no referral is marked BLOCKING and no verdict is held; state which referral blocks, or state that none does']);
+  }
   if (blocking.length) {
     const ids = blocking.map(r => r.id).join(', ');
     const bare = findings.filter(f => {
