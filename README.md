@@ -122,6 +122,7 @@ runs/report-b-full-record.md        FAIL:11 (expected fail:11)  as declared
 runs/report-c-contaminated.md       FAIL:18 (expected fail:18)  as declared
 runs/report-d-tampered.md           FAIL:16 (expected fail:16)  as declared
 runs/report-e-compliant-fixture.md  PASS    (expected pass)     as declared
+runs/report-f-accenture.md PASS (expected pass) as declared
 
 6 of 6 reports behaved as documented.
 ```
