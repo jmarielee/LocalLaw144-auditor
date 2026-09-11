@@ -408,7 +408,7 @@ function main() {
   console.log('');
   console.log(anyFail
     ? 'Some reports did not behave as declared. Every failure is printed above.'
-    : 'Every report behaved as its header declares. Failures shown above are the\ndocumented ones: two runs predate rules, one is deliberately corrupted, one\ncarries a defect the auditor itself found. See TESTING.md.');
+    : 'Every report behaved as its header declares. Failures shown above are the\ndocumented ones: two runs predate rules, one is deliberately corrupted, one\ncarries defects the auditor itself found. See TESTING.md.');
   process.exit(anyFail ? 1 : 0);
 }
 
