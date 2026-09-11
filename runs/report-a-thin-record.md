@@ -14,7 +14,7 @@ Chat conditions: first run, fresh chat, nothing preceding it.
 Predates two rules.md changes — the held-verdict notation and the mandatory
 quote field on referrals. Neither appears here.
 
-expect: fail — predates the held-verdict notation and the mandatory referral quote field
+expect: fail (18) — predates the held-verdict notation and the mandatory referral quote field
 -->
 
 # LL144 AUDIT REPORT — ROBERT HALF INC.

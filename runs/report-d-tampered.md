@@ -31,7 +31,7 @@ catches exactly these and nothing else:
 Expected: node verify.js reports all four, and nothing else.
 To reproduce: diff this file against report-b-full-record.md.
 
-expect: fail — four defects planted on purpose, plus the two inherited from Run B
+expect: fail (16) — four defects planted on purpose, plus every defect Run B already carried, which this file inherits as a copy of it
 -->
 
 # Local Law 144 audit report — Robert Half Inc.

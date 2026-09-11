@@ -1,5 +1,5 @@
 <!--
-expect: fail — REF-01's YES branch assigns verdicts to two obligations REF-03 also governs, without enumerating; see TESTING.md
+expect: fail (11) — REF-01's YES branch assigns verdicts to two obligations REF-03 also governs, without enumerating; see TESTING.md
 -->
 
 # Local Law 144 audit report — Robert Half Inc.

@@ -88,8 +88,9 @@ id:         F-02
 obligation: SUMMARY-PUBLIC
 verdict:    PASS (held — REF-01)
 severity:   —
-provision:  admin-20-871-requirements.md:L24
-quote:      as well as the distribution date of the tool to which such audit applies has
+provision:  admin-20-871-requirements.md:L23
+quote:      2.   A summary of the results of the most recent bias audit of such tool
+            as well as the distribution date of the tool to which such audit applies has
             been made publicly available on the website of the employer or employment
             agency prior to the use of such tool.
 searched:   https://meridiantalent.example/careers  (2026-09-11, 09:10)
@@ -146,8 +147,9 @@ id:         F-05
 obligation: SUMMARY-LINK
 verdict:    PASS (held — REF-01)
 severity:   —
-provision:  rcny-5-303-published-results.md:L29
-quote:      active hyperlink to a website containing the required summary of results and
+provision:  rcny-5-303-published-results.md:L28
+quote:      (b)   The requirements of subdivision (a) of this section may be met with an
+            active hyperlink to a website containing the required summary of results and
             distribution date, provided that the link is clearly identified as a link to
             results of the bias audit.
 searched:   https://meridiantalent.example/careers  (2026-09-11, 09:10)
@@ -281,8 +283,10 @@ id:         F-10
 obligation: DATA-DISCLOSURE
 verdict:    PASS (held — REF-01)
 severity:   —
-provision:  admin-20-871-requirements.md:L42
-quote:      decision tool, the source of such data and the employer or employment agency's
+provision:  admin-20-871-requirements.md:L40
+quote:      3.   If not disclosed on the employer or employment agency's website,
+            information about the type of data collected for the automated employment
+            decision tool, the source of such data and the employer or employment agency's
             data retention policy shall be available upon written request by a candidate or
             employee. Such information shall be provided within 30 days of the written
             request.
@@ -304,8 +308,9 @@ id:         F-11
 obligation: DATA-WEBPOST
 verdict:    PASS (held — REF-01)
 severity:   —
-provision:  rcny-5-304-notice.md:L44
-quote:      clear and conspicuous manner about its AEDT data retention policy, the type of
+provision:  rcny-5-304-notice.md:L43
+quote:      (1)   Provide information on the employment section of its website in a
+            clear and conspicuous manner about its AEDT data retention policy, the type of
             data collected for the AEDT, and the source of the data;
 searched:   https://meridiantalent.example/careers  (2026-09-11, 09:10)
             https://meridiantalent.example/careers/nyc-disclosures  (2026-09-11, 09:18)
