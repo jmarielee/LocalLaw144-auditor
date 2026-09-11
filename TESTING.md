@@ -1,7 +1,8 @@
 # What was tested, and what broke
 
-Five runs, all five published in `runs/`. Three against a real employer, one
-against a synthetic fixture built to comply, one deliberately corrupted.
+Six runs, all six published in `runs/`. Three against one real employer, one
+against a second real employer with live retrieval, one against a synthetic
+fixture built to comply, one deliberately corrupted.
 
 | Run | Conditions | Result |
 | --- | --- | --- |
@@ -10,6 +11,7 @@ against a synthetic fixture built to comply, one deliberately corrupted.
 | C | Full evidence record, but run in the chat containing Run A's report | **Discounted.** Not a clean test of the folder; published labelled |
 | D | Not a run. A copy of B with four defects planted in it | Fails on those four plus every defect Run B already carried — sixteen in total |
 | E | Synthetic employer built to comply, fresh chat | Eleven PASS, zero NOT APPLICABLE, zero FAIL; passes verification. The answer key predicted nine PASS and one NOT APPLICABLE — the auditor diverged on `SUMMARY-LINK` and was right; see the addendum in `fixture-compliant-EXPECTED.md` |
+| F | Accenture, a real subject with a substantive NY disclosure, fresh chat, live retrieval | Seven PASS, two FAIL, two REFERRED. First run with passes and failures in the same report. Opened a referral the rules never anticipated, and caught a defect in the reference files nobody had planted — see below |
 
 **No fabrications.** Every checkable detail in Run A — URLs, document dates,
 quoted page text, the location string on the corporate requisition — was checked
