@@ -242,3 +242,7 @@ certification. This is a documented comparison of publicly observable employer d
 A clean report means the four obligations were checked and found satisfied on that
 date. It does not mean an employer is compliant with Local Law 144, and it never
 means their hiring is fair.
+
+---
+
+© 2026 Jodi Paige-Lee / Interstitial Studios. All rights reserved.
